@@ -1,0 +1,94 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
+}
+
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 8%;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 900px;
+}
+
+.hero-label {
+    color: #8b8b8b;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 30px;
+}
+
+.hero h1 span {
+    color: #00c896;
+    display: block;
+}
+
+.hero-description {
+    max-width: 650px;
+    margin: 0 auto 40px;
+    color: #b5b5b5;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 26px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-primary {
+    background: #00c896;
+    color: #000000;
+}
+
+.btn-primary:hover {
+    background: #00e6ac;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    border: 1px solid #333333;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    border-color: #00c896;
+    color: #00c896;
+    transform: translateY(-2px);
+}
