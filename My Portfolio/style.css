@@ -257,3 +257,136 @@ body {
     line-height: 1.7;
     max-width: 400px;
 }
+.projects {
+    padding: 140px 8%;
+    border-top: 1px solid #1a1a1a;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.project-card {
+    padding: 40px;
+    border: 1px solid #252525;
+    background: #0d0d0d;
+    transition: 0.3s ease;
+}
+
+.project-card:hover {
+    border-color: #00c896;
+    transform: translateY(-5px);
+}
+
+.project-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.project-number {
+    color: #00c896;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.project-type {
+    color: #666666;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+}
+
+.project-card h3 {
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+.project-card > p {
+    color: #888888;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.project-tags span {
+    padding: 7px 11px;
+    border: 1px solid #292929;
+    color: #999999;
+    font-size: 11px;
+}
+
+.project-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.project-link:hover {
+    color: #00c896;
+}
+.services {
+    padding: 140px 8%;
+    background: #0d0d0d;
+    border-top: 1px solid #1a1a1a;
+}
+
+.services-list {
+    border-top: 1px solid #292929;
+}
+
+.service-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 50px;
+    gap: 30px;
+    align-items: center;
+    padding: 35px 0;
+    border-bottom: 1px solid #292929;
+    transition: 0.3s ease;
+}
+
+.service-item:hover {
+    padding-left: 15px;
+    padding-right: 15px;
+    background: #111111;
+}
+
+.service-number {
+    color: #00c896;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.service-content h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.service-content p {
+    color: #888888;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 650px;
+}
+
+.service-arrow {
+    color: #666666;
+    font-size: 24px;
+    transition: 0.3s ease;
+}
+
+.service-item:hover .service-arrow {
+    color: #00c896;
+    transform: translate(4px, -4px);
+}
