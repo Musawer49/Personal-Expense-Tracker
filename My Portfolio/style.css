@@ -228,13 +228,16 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1px;
-    background: #292929;
-    border: 1px solid #292929;
+    /* background: #292929; */
+    /* border: 1px solid #292929; */
+    border-radius: 20px;
 }
 
 .skill-card {
-    background: #0d0d0d;
+    /* background: #0d0d0d; */
+    background: #292929;
     padding: 45px;
+    border-radius: 20px;
     min-height: 230px;
     transition: 0.3s ease;
 }
@@ -275,6 +278,7 @@ body {
 .project-card {
     padding: 40px;
     border: 1px solid #252525;
+    border-radius: 20px;
     background: #0d0d0d;
     transition: 0.3s ease;
 }
