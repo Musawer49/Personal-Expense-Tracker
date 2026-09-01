@@ -1,6 +1,10 @@
 import os 
 import shutil 
+
+# Folder to Organize
 folder_path = r"C:\Users\Musaw\OneDrive\Desktop\Test Folder" 
+
+# File extensions and their destination folders
 folders = { ".mp4": "Videos", 
         ".mkv": "Videos", 
         ".avi": "Videos", 
@@ -14,8 +18,11 @@ folders = { ".mp4": "Videos",
         ".docx": "Documents", 
         ".txt": "Documents" 
         } 
+
+# Get all files in the folder
 files = os.listdir(folder_path) 
 
+# Process each files
 for file in files:
     file_path = os.path.join(folder_path, file)
 
