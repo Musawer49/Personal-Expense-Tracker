@@ -1,4 +1,6 @@
 import tkinter as tk
+def add_expense():
+
 root = tk.Tk()
 root.title("Personal Expense Tracker")
 root.geometry("1000x600")
@@ -71,7 +73,8 @@ date_entry.grid(row=3, column=1, padx=10, pady=10)
 add_button = tk.Button(
     inner_frame,
     text="Add Expense",
-    font=("Arial", 14, "bold")
+    font=("Arial", 14, "bold"),
+    command=add_expense,
 )
 add_button.grid(row=4, column=0, columnspan=2, pady=20)
 
