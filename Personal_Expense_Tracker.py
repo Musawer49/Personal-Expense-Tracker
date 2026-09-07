@@ -1,6 +1,14 @@
 import tkinter as tk
 def add_expense():
+    amount = amount_entry.get()
+    category = category_entry.get()
+    description = description_entry.get()
+    date = date_entry.get()
 
+    print("Amount:", amount)
+    print("Category:", category)
+    print("Description:", description)
+    print("Date:", date)
 root = tk.Tk()
 root.title("Personal Expense Tracker")
 root.geometry("1000x600")
