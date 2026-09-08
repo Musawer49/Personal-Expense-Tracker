@@ -1,14 +1,48 @@
 import tkinter as tk
+expenses = []
+
 def add_expense():
     amount = amount_entry.get()
+    try:
+        amount = float(amount)
+    except ValueError:
+        print("Please enter a valid amount.")
+        return
+    if amount <= 0:
+        print("Amount must be greater than 0.")
+        return
     category = category_entry.get()
+    if not category:
+        print("Category cannot be empty.")
+        return
     description = description_entry.get()
     date = date_entry.get()
 
+    expenses.append({
+    "amount": amount,
+    "category": category,
+    "description": description,
+    "date": date
+})
+    expense_label = tk.Label(
+    expense_frame,
+    text=f"{date} | {category} | {description} | Rs. {amount}",
+    font=("Arial", 13),
+    bg="White"
+)
+    expense_label.pack(anchor="w", padx=15, pady=8)
+
+    amount_entry.delete(0, tk.END)
+    category_entry.delete(0, tk.END)
+    description_entry.delete(0, tk.END)
+    date_entry.delete(0, tk.END)
+
+    print(expenses)
     print("Amount:", amount)
     print("Category:", category)
     print("Description:", description)
     print("Date:", date)
+
 root = tk.Tk()
 root.title("Personal Expense Tracker")
 root.geometry("1000x600")
@@ -22,6 +56,15 @@ my_label = tk.Label(
 my_label.pack(pady=10)
 inner_frame = tk.Frame(my_frame, bg="LightBlue", bd=2, relief="sunken")
 inner_frame.pack(fill="both", expand=True, padx=20, pady=10)
+
+expense_frame = tk.Frame(
+    my_frame,
+    bg="White",
+    bd=2,
+    relief="sunken"
+)
+expense_frame.pack(fill="both", expand=True, padx=20, pady=10)
+
 # Amount
 amount_label = tk.Label(
     inner_frame,
@@ -35,6 +78,7 @@ amount_entry = tk.Entry(
     font=("Arial", 14)
 )
 amount_entry.grid(row=0, column=1, padx=10, pady=10)
+
 # Category
 category_label = tk.Label(
     inner_frame,
@@ -48,6 +92,7 @@ category_entry = tk.Entry(
     font=("Arial", 14)
 )
 category_entry.grid(row=1, column=1, padx=10, pady=10)
+
 # Description
 description_label = tk.Label(
     inner_frame,
