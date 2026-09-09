@@ -1,5 +1,19 @@
 import tkinter as tk
+import json 
 expenses = []
+
+def save_expenses():
+    with open("expenses.json", "w") as file:
+        json.dump(expenses, file, indent=4)
+
+def load_expenses():
+    global expenses
+
+    try:
+        with open("expenses.json", "r") as file:
+            expenses = json.load(file)
+    except FileNotFoundError:
+        expenses = []
 
 def add_expense():
     amount = amount_entry.get()
@@ -17,6 +31,9 @@ def add_expense():
         return
     description = description_entry.get()
     date = date_entry.get()
+    if not date:
+        print("Date cannot be empty.")
+        return
 
     expenses.append({
     "amount": amount,
@@ -24,6 +41,8 @@ def add_expense():
     "description": description,
     "date": date
 })
+    save_expenses()
+    
     expense_label = tk.Label(
     expense_frame,
     text=f"{date} | {category} | {description} | Rs. {amount}",
@@ -43,6 +62,7 @@ def add_expense():
     print("Description:", description)
     print("Date:", date)
 
+load_expenses()
 root = tk.Tk()
 root.title("Personal Expense Tracker")
 root.geometry("1000x600")
