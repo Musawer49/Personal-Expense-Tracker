@@ -15,6 +15,16 @@ def load_expenses():
     except FileNotFoundError:
         expenses = []
 
+def display_expense(expense):
+    expense_label = tk.Label(
+        expense_frame,
+        text=f"{expense['date']} | {expense['category']} | "
+             f"{expense['description']} | Rs. {expense['amount']}",
+        font=("Arial", 13),
+        bg="White"
+    )
+    expense_label.pack(anchor="w", padx=15, pady=8)
+
 def add_expense():
     amount = amount_entry.get()
     try:
@@ -49,12 +59,12 @@ def add_expense():
     font=("Arial", 13),
     bg="White"
 )
-    expense_label.pack(anchor="w", padx=15, pady=8)
-
-    amount_entry.delete(0, tk.END)
-    category_entry.delete(0, tk.END)
-    description_entry.delete(0, tk.END)
-    date_entry.delete(0, tk.END)
+    display_expense({
+    "amount": amount,
+    "category": category,
+    "description": description,
+    "date": date
+})
 
     print(expenses)
     print("Amount:", amount)
@@ -84,7 +94,8 @@ expense_frame = tk.Frame(
     relief="sunken"
 )
 expense_frame.pack(fill="both", expand=True, padx=20, pady=10)
-
+for expense in expenses:
+    display_expense(expense)
 # Amount
 amount_label = tk.Label(
     inner_frame,
