@@ -88,5 +88,53 @@
         "category": "Food",
         "description": "Dinner",
         "date": "11-9-2026"
+    },
+    {
+        "amount": 500.0,
+        "category": "Transport",
+        "description": "Bus Fair",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 10000.0,
+        "category": "Shopping",
+        "description": "Jacket",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 50.0,
+        "category": "Stationary Item",
+        "description": "Pen",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 50.0,
+        "category": "Stationary Item",
+        "description": "Pen",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 100.0,
+        "category": "Stationary Item",
+        "description": "Pen and Marker",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 200.0,
+        "category": "Study Item",
+        "description": "Notebook",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 200.0,
+        "category": "Study Item",
+        "description": "Notebook",
+        "date": "12-9-2026"
+    },
+    {
+        "amount": 200.0,
+        "category": "Study Item",
+        "description": "Notebook",
+        "date": "12-9-2026"
     }
 ]
