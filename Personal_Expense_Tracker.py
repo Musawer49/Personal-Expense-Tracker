@@ -18,17 +18,37 @@ def load_expenses():
     except FileNotFoundError:
         expenses = []
 
-
 def display_expense(expense):
     expense_label = tk.Label(
         expense_frame,
-        text=f"{expense['date']} | {expense['category']} | "
-             f"{expense['description']} | Rs. {expense['amount']}",
+        text=(
+            f"{expense['category']} : {expense['description']}\n"
+            f"Rs: {expense['amount']}\n"
+            f"Date: {expense['date']}"
+        ),
         font=("Arial", 13),
-        bg="White"
+        bg="White",
+        anchor="w",
+        justify="left"
     )
-    expense_label.pack(anchor="w", padx=15, pady=8)
 
+    expense_label.pack(
+        fill="x",
+        padx=15,
+        pady=(8, 0)
+    )
+
+    separator = tk.Frame(
+        expense_frame,
+        height=1,
+        bg="LightGray"
+    )
+
+    separator.pack(
+        fill="x",
+        padx=15,
+        pady=(8, 0)
+    )
 
 def add_expense():
     amount = amount_entry.get()
