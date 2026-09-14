@@ -19,8 +19,21 @@ def load_expenses():
         expenses = []
 
 def display_expense(expense):
-    expense_label = tk.Label(
+    expense_card = tk.Frame(
         expense_frame,
+        bg="White",
+        bd=1,
+        relief="solid"
+    )
+
+    expense_card.pack(
+        fill="x",
+        padx=15,
+        pady=8
+    )
+
+    expense_label = tk.Label(
+        expense_card,
         text=(
             f"{expense['category']} : {expense['description']}\n"
             f"Rs: {expense['amount']}\n"
@@ -35,19 +48,7 @@ def display_expense(expense):
     expense_label.pack(
         fill="x",
         padx=15,
-        pady=(8, 0)
-    )
-
-    separator = tk.Frame(
-        expense_frame,
-        height=1,
-        bg="LightGray"
-    )
-
-    separator.pack(
-        fill="x",
-        padx=15,
-        pady=(8, 0)
+        pady=10
     )
 
 def add_expense():
