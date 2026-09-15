@@ -2,7 +2,7 @@ import tkinter as tk
 import json
 
 expenses = []
-
+editing_expense = None
 
 def save_expenses():
     with open("expenses.json", "w") as file:
@@ -50,19 +50,42 @@ def display_expense(expense):
         padx=15,
         pady=10
     )
+    button_frame = tk.Frame(
+    expense_card,
+    bg="White"
+    )
+
+    button_frame.pack(
+    padx=15,
+    pady=5
+    )
+
+
+    edit_button = tk.Button(
+    button_frame,
+    text="Edit",
+    command=lambda: edit_expense(expense, expense_card)
+    )
+
+    edit_button.pack(
+    side="left",
+    padx=5
+    )
+
 
     delete_button = tk.Button(
-    expense_card,
+    button_frame,
     text="Delete",
     command=lambda: delete_expense(expense, expense_card)
     )
 
     delete_button.pack(
-    padx=15,
-    pady=5
+    side="left",
+    padx=5
     )
 
 def add_expense():
+    global editing_expense
     amount = amount_entry.get()
 
     try:
@@ -89,7 +112,25 @@ def add_expense():
         print("Date cannot be empty.")
         return
 
-    expenses.append({
+    if editing_expense is not None:
+        expense, expense_card = editing_expense
+
+        expense["amount"] = amount
+        expense["category"] = category
+        expense["description"] = description
+        expense["date"] = date
+        expense_card.destroy()
+        display_expense(expense)
+        editing_expense = None
+    else:
+        expenses.append({
+            "amount": amount,
+            "category": category,
+            "description": description,
+            "date": date
+    })
+
+    display_expense({
         "amount": amount,
         "category": category,
         "description": description,
@@ -97,11 +138,6 @@ def add_expense():
     })
 
     save_expenses()
-
-def delete_expense(expense, expense_card):
-    expenses.remove(expense)
-    save_expenses()
-    expense_card.destroy()
 
     display_expense({
         "amount": amount,
@@ -116,6 +152,28 @@ def delete_expense(expense, expense_card):
     print("Description:", description)
     print("Date:", date)
 
+
+def delete_expense(expense, expense_card):
+    expenses.remove(expense)
+    save_expenses()
+    expense_card.destroy()
+
+def edit_expense(expense, expense_card):
+    global editing_expense
+
+    editing_expense = (expense, expense_card)
+
+    amount_entry.delete(0, tk.END)
+    amount_entry.insert(0, expense["amount"])
+
+    category_entry.delete(0, tk.END)
+    category_entry.insert(0, expense["category"])
+
+    description_entry.delete(0, tk.END)
+    description_entry.insert(0, expense["description"])
+
+    date_entry.delete(0, tk.END)
+    date_entry.insert(0, expense["date"])
 
 load_expenses()
 
