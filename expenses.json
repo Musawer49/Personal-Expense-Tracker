@@ -3,66 +3,6 @@
         "amount": 1200.0,
         "category": "Food",
         "description": "Dinner",
-        "date": "10-10-2026"
-    },
-    {
-        "amount": 100.0,
-        "category": "Transportation",
-        "description": "Bus Fair",
-        "date": "10-9-2026"
-    },
-    {
-        "amount": 200.0,
-        "category": "Food",
-        "description": "Fast food",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 200.0,
-        "category": "Launch",
-        "description": "Aalo Paratha ",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 100.0,
-        "category": "Transport",
-        "description": "Bus Fair ",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 100.0,
-        "category": "Transport",
-        "description": "Bus Fair ",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 100.0,
-        "category": "Transport",
-        "description": "Bus Fair ",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1200.0,
-        "category": "Food",
-        "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1200.0,
-        "category": "Food",
-        "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1200.0,
-        "category": "Food",
-        "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1200.0,
-        "category": "Food",
-        "description": "Dinner",
         "date": "11-9-2026"
     },
     {

@@ -35,7 +35,7 @@ def display_expense(expense):
     expense_label = tk.Label(
         expense_card,
         text=(
-            f"{expense['category']} : {expense['description']}\n"
+            f"{expense['category']}: {expense['description']}\n"
             f"Rs: {expense['amount']}\n"
             f"Date: {expense['date']}"
         ),
@@ -49,6 +49,17 @@ def display_expense(expense):
         fill="x",
         padx=15,
         pady=10
+    )
+
+    delete_button = tk.Button(
+    expense_card,
+    text="Delete",
+    command=lambda: delete_expense(expense, expense_card)
+    )
+
+    delete_button.pack(
+    padx=15,
+    pady=5
     )
 
 def add_expense():
@@ -86,6 +97,11 @@ def add_expense():
     })
 
     save_expenses()
+
+def delete_expense(expense, expense_card):
+    expenses.remove(expense)
+    save_expenses()
+    expense_card.destroy()
 
     display_expense({
         "amount": amount,
