@@ -175,6 +175,20 @@ def edit_expense(expense, expense_card):
     date_entry.delete(0, tk.END)
     date_entry.insert(0, expense["date"])
 
+def search_expenses():
+    search_text = search_entry.get().lower()
+
+    for widget in expense_frame.winfo_children():
+        widget.destroy()
+
+    for expense in expenses:
+        if (
+            search_text in expense["category"].lower()
+            or search_text in expense["description"].lower()
+            or search_text in expense["date"].lower()
+        ):
+            display_expense(expense)
+
 load_expenses()
 
 root = tk.Tk()
@@ -218,6 +232,39 @@ inner_frame.pack(
     pady=10
 )
 
+search_frame = tk.Frame(
+    my_frame,
+    bg="LightGray"
+)
+
+search_frame.pack(
+    fill="x",
+    padx=20,
+    pady=5
+)
+
+search_entry = tk.Entry(
+    search_frame,
+    font=("Arial", 13)
+)
+
+search_entry.pack(
+    side="left",
+    fill="x",
+    expand=True,
+    padx=5
+)
+
+search_button = tk.Button(
+    search_frame,
+    text="Search",
+    command=search_expenses
+)
+
+search_button.pack(
+    side="left",
+    padx=5
+)
 
 expense_container = tk.Frame(
     my_frame,
