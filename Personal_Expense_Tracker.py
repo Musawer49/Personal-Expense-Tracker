@@ -189,6 +189,15 @@ def search_expenses():
         ):
             display_expense(expense)
 
+def clear_search():
+    search_entry.delete(0, tk.END)
+
+    for widget in expense_frame.winfo_children():
+        widget.destroy()
+
+    for expense in expenses:
+        display_expense(expense)
+
 load_expenses()
 
 root = tk.Tk()
@@ -262,6 +271,17 @@ search_button = tk.Button(
 )
 
 search_button.pack(
+    side="left",
+    padx=5
+)
+
+clear_button = tk.Button(
+    search_frame,
+    text="Clear",
+    command=clear_search
+)
+
+clear_button.pack(
     side="left",
     padx=5
 )
