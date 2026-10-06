@@ -138,6 +138,7 @@ def add_expense():
     })
 
     save_expenses()
+    update_summary()
 
     display_expense({
         "amount": amount,
@@ -198,6 +199,13 @@ def clear_search():
     for expense in expenses:
         display_expense(expense)
 
+def update_summary():
+    total = sum(expense["amount"] for expense in expenses)
+
+    total_label.config(
+        text=f"Total Expenses\nRs. {total:.2f}"
+    )
+
 load_expenses()
 
 root = tk.Tk()
@@ -252,6 +260,33 @@ search_frame.pack(
     pady=5
 )
 
+summary_frame = tk.Frame(
+    my_frame,
+    bg="White",
+    bd=2,
+    relief="solid",
+    width=250
+)
+
+summary_frame.pack(
+    side="right",
+    fill="y",
+    padx=10,
+    pady=10
+)
+
+total_label = tk.Label(
+    summary_frame,
+    text="Total Expenses\nRs. 0",
+    bg="White",
+    font=("Arial", 14)
+)
+
+total_label.pack(
+    padx=20,
+    pady=20
+)
+
 search_entry = tk.Entry(
     search_frame,
     font=("Arial", 13)
@@ -294,11 +329,13 @@ expense_container = tk.Frame(
 )
 
 expense_container.pack(
+    side="left",
     fill="both",
     expand=True,
     padx=20,
     pady=10
 )
+
 
 expense_canvas = tk.Canvas(
     expense_container,
