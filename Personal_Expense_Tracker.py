@@ -85,7 +85,9 @@ def display_expense(expense):
     )
 
 def add_expense():
+
     global editing_expense
+
     amount = amount_entry.get()
 
     try:
@@ -119,45 +121,34 @@ def add_expense():
         expense["category"] = category
         expense["description"] = description
         expense["date"] = date
+
         expense_card.destroy()
+
         display_expense(expense)
+
         editing_expense = None
+
     else:
-        expenses.append({
+        expense = {
             "amount": amount,
             "category": category,
             "description": description,
             "date": date
-    })
+        }
 
-    display_expense({
-        "amount": amount,
-        "category": category,
-        "description": description,
-        "date": date
-    })
+        expenses.append(expense)
+
+        display_expense(expense)
 
     save_expenses()
     update_summary()
-
-    display_expense({
-        "amount": amount,
-        "category": category,
-        "description": description,
-        "date": date
-    })
-
-    print(expenses)
-    print("Amount:", amount)
-    print("Category:", category)
-    print("Description:", description)
-    print("Date:", date)
 
 
 def delete_expense(expense, expense_card):
     expenses.remove(expense)
     save_expenses()
     expense_card.destroy()
+    update_summary()
 
 def edit_expense(expense, expense_card):
     global editing_expense
@@ -201,9 +192,23 @@ def clear_search():
 
 def update_summary():
     total = sum(expense["amount"] for expense in expenses)
+    count = len(expenses)
+
+    if expenses:
+        highest = max(expense["amount"] for expense in expenses)
+    else:
+        highest = 0    
 
     total_label.config(
         text=f"Total Expenses\nRs. {total:.2f}"
+    )
+
+    count_label.config(
+        text=f"Number of Expenses\n{count}"
+    )
+
+    highest_label.config(
+        text=f"Highest Expense\nRs. {highest:.2f}"
     )
 
 load_expenses()
@@ -283,6 +288,30 @@ total_label = tk.Label(
 )
 
 total_label.pack(
+    padx=20,
+    pady=20
+)
+
+count_label = tk.Label(
+    summary_frame,
+    text="Number of Expenses\n0",
+    bg="White",
+    font=("Arial", 14)
+)
+
+count_label.pack(
+    padx=20,
+    pady=20
+)
+
+highest_label = tk.Label(
+    summary_frame,
+    text="Highest Expense\nRs. 0.00",
+    bg="White",
+    font=("Arial", 14)
+)
+
+highest_label.pack(
     padx=20,
     pady=20
 )

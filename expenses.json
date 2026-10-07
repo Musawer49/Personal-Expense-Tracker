@@ -1,68 +1,20 @@
 [
     {
-        "amount": 350.0,
-        "category": "Stationary Item",
-        "description": "Register",
-        "date": "12-9-2026"
+        "amount": 1500.0,
+        "category": "Winter Item ",
+        "description": "Jacket",
+        "date": "7-10-2026"
     },
     {
-        "amount": 50.0,
-        "category": "Stationary Item",
-        "description": "Marker",
-        "date": "12-10-2026"
+        "amount": 2000.0,
+        "category": "Transport",
+        "description": "Bus Fair",
+        "date": "7-12-2026"
     },
     {
-        "amount": 100.0,
-        "category": "Stationary Item",
-        "description": "Pen and Marker",
-        "date": "12-9-2026"
-    },
-    {
-        "amount": 200.0,
-        "category": "Study Item",
-        "description": "Notebook",
-        "date": "12-9-2026"
-    },
-    {
-        "amount": 200.0,
-        "category": "Study Item",
-        "description": "Notebook",
-        "date": "12-9-2026"
-    },
-    {
-        "amount": 200.0,
-        "category": "Study Item",
-        "description": "Notebook",
-        "date": "12-9-2026"
-    },
-    {
-        "amount": 1000.0,
+        "amount": 2500.0,
         "category": "Food",
         "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1000.0,
-        "category": "Food",
-        "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1000.0,
-        "category": "Food",
-        "description": "Dinner",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 1000.0,
-        "category": "Food",
-        "description": "Launch",
-        "date": "11-9-2026"
-    },
-    {
-        "amount": 350.0,
-        "category": "Stationary Item",
-        "description": "Register",
-        "date": "12-9-2026"
+        "date": "8-10-2026"
     }
 ]
