@@ -197,7 +197,7 @@ def update_summary():
     if expenses:
         highest = max(expense["amount"] for expense in expenses)
     else:
-        highest = 0    
+        highest = 0
 
     total_label.config(
         text=f"Total Expenses\nRs. {total:.2f}"
@@ -210,8 +210,7 @@ def update_summary():
     highest_label.config(
         text=f"Highest Expense\nRs. {highest:.2f}"
     )
-
-load_expenses()
+    print("Highest expense:", highest)
 
 root = tk.Tk()
 root.title("Personal Expense Tracker")
@@ -275,7 +274,7 @@ summary_frame = tk.Frame(
 
 summary_frame.pack(
     side="right",
-    fill="y",
+    fill="both",
     padx=10,
     pady=10
 )
@@ -306,8 +305,9 @@ count_label.pack(
 
 highest_label = tk.Label(
     summary_frame,
-    text="Highest Expense\nRs. 0.00",
-    bg="White",
+    text="TEST: Highest Expense\nRs. 0.00",
+    bg="yellow",
+    fg="black",
     font=("Arial", 14)
 )
 
