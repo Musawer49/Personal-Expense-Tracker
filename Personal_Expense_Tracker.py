@@ -193,6 +193,7 @@ def clear_search():
 def update_summary():
     total = sum(expense["amount"] for expense in expenses)
     count = len(expenses)
+    average = total / count if count > 0 else 0
 
     if expenses:
         highest = max(expense["amount"] for expense in expenses)
@@ -210,7 +211,10 @@ def update_summary():
     highest_label.config(
         text=f"Highest Expense\nRs. {highest:.2f}"
     )
-    print("Highest expense:", highest)
+
+    average_label.config(
+        text=f"Average Expense\nRS. {average:.2f}"
+    )
 
 root = tk.Tk()
 root.title("Personal Expense Tracker")
@@ -237,32 +241,6 @@ my_label = tk.Label(
 )
 
 my_label.pack(pady=10)
-
-
-inner_frame = tk.Frame(
-    my_frame,
-    bg="LightBlue",
-    bd=2,
-    relief="sunken"
-)
-
-inner_frame.pack(
-    fill="both",
-    expand=True,
-    padx=20,
-    pady=10
-)
-
-search_frame = tk.Frame(
-    my_frame,
-    bg="LightGray"
-)
-
-search_frame.pack(
-    fill="x",
-    padx=20,
-    pady=5
-)
 
 summary_frame = tk.Frame(
     my_frame,
@@ -305,15 +283,51 @@ count_label.pack(
 
 highest_label = tk.Label(
     summary_frame,
-    text="TEST: Highest Expense\nRs. 0.00",
-    bg="yellow",
-    fg="black",
+    text="Highest Expense\nRs. 0.00",
+    bg="White",
     font=("Arial", 14)
 )
 
 highest_label.pack(
     padx=20,
     pady=20
+)
+
+average_label = tk.Label(
+    summary_frame,
+    text="Average Expense\nRS. 0.00",
+    bg="White",
+    font=("Arial", 14)
+)
+
+average_label.pack(
+    padx=20,
+    pady=20
+)
+
+inner_frame = tk.Frame(
+    my_frame,
+    bg="LightBlue",
+    bd=2,
+    relief="sunken"
+)
+
+inner_frame.pack(
+    fill="both",
+    expand=True,
+    padx=20,
+    pady=10
+)
+
+search_frame = tk.Frame(
+    my_frame,
+    bg="LightGray"
+)
+
+search_frame.pack(
+    fill="x",
+    padx=20,
+    pady=5
 )
 
 search_entry = tk.Entry(
