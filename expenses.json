@@ -10,5 +10,17 @@
         "category": "Personal Item",
         "description": "Jacket",
         "date": "10-10-2026"
+    },
+    {
+        "amount": 10000.0,
+        "category": "Office Item",
+        "description": "Computer Table",
+        "date": "11-10-2026"
+    },
+    {
+        "amount": 50000.0,
+        "category": "Office Item",
+        "description": "Computer ",
+        "date": "10-1-2026"
     }
 ]

@@ -1,5 +1,6 @@
 import tkinter as tk
 import json
+from datetime import datetime
 
 expenses = []
 editing_expense = None
@@ -17,6 +18,7 @@ def load_expenses():
             expenses = json.load(file)
     except FileNotFoundError:
         expenses = []
+load_expenses()
 
 def display_expense(expense):
     expense_card = tk.Frame(
@@ -190,6 +192,19 @@ def clear_search():
     for expense in expenses:
         display_expense(expense)
 
+def calculate_monthly_expense(month, year):
+    monthly_total = 0
+
+    for expense in expenses:
+        expense_date = datetime.strptime(
+            expense["date"], "%d-%m-%Y"
+        )
+
+        if expense_date.month == month and expense_date.year == year:
+            monthly_total += expense["amount"]
+
+    return monthly_total
+print("October expenses:", calculate_monthly_expense(10, 2026))
 def update_summary():
     total = sum(expense["amount"] for expense in expenses)
     count = len(expenses)
@@ -203,17 +218,19 @@ def update_summary():
     total_label.config(
         text=f"Total Expenses\nRs. {total:.2f}"
     )
-
     count_label.config(
         text=f"Number of Expenses\n{count}"
     )
-
     highest_label.config(
         text=f"Highest Expense\nRs. {highest:.2f}"
     )
-
     average_label.config(
         text=f"Average Expense\nRS. {average:.2f}"
+    )
+    monthly_total = calculate_monthly_expense(10, 2026)
+
+    monthly_label.config(
+        text=f"October 2026 Expenses\nRs. {monthly_total:.2f}"
     )
 
 root = tk.Tk()
@@ -226,7 +243,6 @@ my_frame = tk.Frame(
     bd=2,
     relief="sunken"
 )
-
 my_frame.pack(
     fill="both",
     expand=True,
@@ -239,7 +255,6 @@ my_label = tk.Label(
     text="Personal Expense Tracker",
     font=("Arial", 24, "bold")
 )
-
 my_label.pack(pady=10)
 
 summary_frame = tk.Frame(
@@ -249,7 +264,6 @@ summary_frame = tk.Frame(
     relief="solid",
     width=250
 )
-
 summary_frame.pack(
     side="right",
     fill="both",
@@ -263,10 +277,9 @@ total_label = tk.Label(
     bg="White",
     font=("Arial", 14)
 )
-
 total_label.pack(
     padx=20,
-    pady=20
+    pady=8
 )
 
 count_label = tk.Label(
@@ -275,10 +288,9 @@ count_label = tk.Label(
     bg="White",
     font=("Arial", 14)
 )
-
 count_label.pack(
     padx=20,
-    pady=20
+    pady=8
 )
 
 highest_label = tk.Label(
@@ -287,10 +299,9 @@ highest_label = tk.Label(
     bg="White",
     font=("Arial", 14)
 )
-
 highest_label.pack(
     padx=20,
-    pady=20
+    pady=8
 )
 
 average_label = tk.Label(
@@ -299,11 +310,62 @@ average_label = tk.Label(
     bg="White",
     font=("Arial", 14)
 )
-
 average_label.pack(
     padx=20,
-    pady=20
+    pady=8
 )
+
+monthly_label = tk.Label(
+    summary_frame,
+    text="October 2026 Expenses\nRs. 0.00",
+    bg="White",
+    font=("Arial", 14)
+)
+monthly_label.pack(
+    padx=20,
+    pady=8
+)
+
+month_entry = tk.Entry(
+    summary_frame,
+    font=("Arial", 12),
+    width=10
+)
+month_entry.pack(padx=20, pady=3)
+month_entry.insert(0, "10")
+
+year_entry = tk.Entry(
+    summary_frame,
+    font=("Arial", 12),
+    width=10
+)
+year_entry.pack(padx=20, pady=3)
+year_entry.insert(0, "2026")
+
+def show_monthly_expenses():
+    try:
+        month = int(month_entry.get())
+        year = int(year_entry.get())
+
+        if month < 1 or month > 12:
+            print("Month must be between 1 and 12.")
+            return
+
+        monthly_total = calculate_monthly_expense(month, year)
+
+        monthly_label.config(
+            text=f"{month:02d}/{year} Expenses\nRs. {monthly_total:.2f}"
+        )
+
+    except ValueError:
+        print("Please enter a valid month and year.")
+
+monthly_button = tk.Button(
+    summary_frame,
+    text="Calculate Monthly Expenses",
+    command=show_monthly_expenses
+)
+monthly_button.pack(padx=20, pady=5)
 
 inner_frame = tk.Frame(
     my_frame,
@@ -311,7 +373,6 @@ inner_frame = tk.Frame(
     bd=2,
     relief="sunken"
 )
-
 inner_frame.pack(
     fill="both",
     expand=True,
@@ -323,7 +384,6 @@ search_frame = tk.Frame(
     my_frame,
     bg="LightGray"
 )
-
 search_frame.pack(
     fill="x",
     padx=20,
@@ -334,7 +394,6 @@ search_entry = tk.Entry(
     search_frame,
     font=("Arial", 13)
 )
-
 search_entry.pack(
     side="left",
     fill="x",
@@ -347,7 +406,6 @@ search_button = tk.Button(
     text="Search",
     command=search_expenses
 )
-
 search_button.pack(
     side="left",
     padx=5
@@ -358,7 +416,6 @@ clear_button = tk.Button(
     text="Clear",
     command=clear_search
 )
-
 clear_button.pack(
     side="left",
     padx=5
@@ -370,7 +427,6 @@ expense_container = tk.Frame(
     bd=2,
     relief="sunken"
 )
-
 expense_container.pack(
     side="left",
     fill="both",
@@ -384,7 +440,6 @@ expense_canvas = tk.Canvas(
     expense_container,
     bg="White"
 )
-
 expense_canvas.pack(
     side="left",
     fill="both",
@@ -396,7 +451,6 @@ expense_scrollbar = tk.Scrollbar(
     orient="vertical",
     command=expense_canvas.yview
 )
-
 expense_scrollbar.pack(
     side="right",
     fill="y"
@@ -424,10 +478,8 @@ expense_frame.bind(
     )
 )
 
-
 for expense in expenses:
     display_expense(expense)
-
 
 # Amount
 amount_label = tk.Label(
@@ -436,7 +488,6 @@ amount_label = tk.Label(
     font=("Arial", 14),
     bg="LightBlue"
 )
-
 amount_label.grid(
     row=0,
     column=0,
@@ -450,7 +501,6 @@ amount_entry = tk.Entry(
     inner_frame,
     font=("Arial", 14)
 )
-
 amount_entry.grid(
     row=0,
     column=1,
@@ -466,7 +516,6 @@ category_label = tk.Label(
     font=("Arial", 14),
     bg="LightBlue"
 )
-
 category_label.grid(
     row=1,
     column=0,
@@ -480,7 +529,6 @@ category_entry = tk.Entry(
     inner_frame,
     font=("Arial", 14)
 )
-
 category_entry.grid(
     row=1,
     column=1,
@@ -496,7 +544,6 @@ description_label = tk.Label(
     font=("Arial", 14),
     bg="LightBlue"
 )
-
 description_label.grid(
     row=2,
     column=0,
@@ -510,7 +557,6 @@ description_entry = tk.Entry(
     inner_frame,
     font=("Arial", 14)
 )
-
 description_entry.grid(
     row=2,
     column=1,
@@ -526,7 +572,6 @@ date_label = tk.Label(
     font=("Arial", 14),
     bg="LightBlue"
 )
-
 date_label.grid(
     row=3,
     column=0,
@@ -540,7 +585,6 @@ date_entry = tk.Entry(
     inner_frame,
     font=("Arial", 14)
 )
-
 date_entry.grid(
     row=3,
     column=1,
@@ -556,13 +600,10 @@ add_button = tk.Button(
     font=("Arial", 14, "bold"),
     command=add_expense
 )
-
 add_button.grid(
     row=4,
     column=0,
     columnspan=2,
     pady=20
 )
-
-
 root.mainloop()
