@@ -233,6 +233,49 @@ def update_summary():
         text=f"October 2026 Expenses\nRs. {monthly_total:.2f}"
     )
 
+def calculate_category_expenses():
+    category_totals = {}
+
+    for expense in expenses:
+        category = expense["category"]
+        amount = expense["amount"]
+
+        if category in category_totals:
+            category_totals[category] += amount
+        else:
+            category_totals[category] = amount
+
+    return category_totals
+
+def show_category_analysis():
+    category_totals = calculate_category_expenses()
+
+    analysis_window = tk.Toplevel(root)
+    analysis_window.title("Category-wise Expense Analysis")
+    analysis_window.geometry("400x400")
+
+    title_label = tk.Label(
+        analysis_window,
+        text="Category-wise Expenses",
+        font=("Arial", 18, "bold")
+    )
+    title_label.pack(pady=15)
+
+    if not category_totals:
+        tk.Label(
+            analysis_window,
+            text="No expenses available.",
+            font=("Arial", 12)
+        ).pack(pady=10)
+        return
+
+    for category, total in category_totals.items():
+        tk.Label(
+            analysis_window,
+            text=f"{category}: Rs. {total:.2f}",
+            font=("Arial", 13)
+        ).pack(pady=5)
+
 root = tk.Tk()
 root.title("Personal Expense Tracker")
 root.geometry("1000x600")
@@ -366,6 +409,14 @@ monthly_button = tk.Button(
     command=show_monthly_expenses
 )
 monthly_button.pack(padx=20, pady=5)
+
+category_button = tk.Button(
+    summary_frame,
+    text="Category Analysis",
+    font=("Arial", 12),
+    command=show_category_analysis
+)
+category_button.pack(pady=5)
 
 inner_frame = tk.Frame(
     my_frame,

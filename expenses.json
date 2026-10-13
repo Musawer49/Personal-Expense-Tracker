@@ -22,5 +22,11 @@
         "category": "Office Item",
         "description": "Computer ",
         "date": "10-1-2026"
+    },
+    {
+        "amount": 5000.0,
+        "category": "Transport",
+        "description": "Bus Fair ",
+        "date": "20-2-2026"
     }
 ]
