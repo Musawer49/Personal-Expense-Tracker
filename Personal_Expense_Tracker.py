@@ -1,6 +1,8 @@
 import tkinter as tk
 import json
 from datetime import datetime
+import csv
+from tkinter import filedialog, messagebox
 
 expenses = []
 editing_expense = None
@@ -205,6 +207,114 @@ def calculate_monthly_expense(month, year):
 
     return monthly_total
 print("October expenses:", calculate_monthly_expense(10, 2026))
+
+def show_monthly_chart():
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
+
+    monthly_totals = {}
+
+    for expense in expenses:
+        expense_date = datetime.strptime(
+            expense["date"], "%d-%m-%Y"
+        )
+
+        month_year = expense_date.strftime("%b %Y")
+
+        monthly_totals[month_year] = (
+            monthly_totals.get(month_year, 0)
+            + expense["amount"]
+        )
+
+    if not monthly_totals:
+        print("No expenses available to display.")
+        return
+
+    sorted_months = sorted(
+        monthly_totals,
+        key=lambda month: datetime.strptime(month, "%b %Y")
+    )
+
+    totals = [monthly_totals[month] for month in sorted_months]
+
+    # Create the chart
+    fig, ax = plt.subplots(figsize=(11, 6))
+
+    fig.patch.set_facecolor("#F4F7FB")
+    ax.set_facecolor("#FFFFFF")
+
+    bars = ax.bar(
+        sorted_months,
+        totals,
+        color="#4285F4",
+        width=0.55,
+        edgecolor="none"
+    )
+
+    # Add expense amounts above each bar
+    for bar, total in zip(bars, totals):
+        ax.annotate(
+            f"Rs. {total:,.0f}",
+            xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+            xytext=(0, 8),
+            textcoords="offset points",
+            ha="center",
+            va="bottom",
+            fontsize=10,
+            fontweight="bold",
+            color="#263238"
+        )
+
+    # Chart title and labels
+    ax.set_title(
+        "Monthly Expense Analysis",
+        fontsize=18,
+        fontweight="bold",
+        color="#1F2937",
+        pad=22
+    )
+
+    ax.set_xlabel(
+        "Month",
+        fontsize=11,
+        color="#4B5563",
+        labelpad=12
+    )
+
+    ax.set_ylabel(
+        "Total Expenses (Rs.)",
+        fontsize=11,
+        color="#4B5563",
+        labelpad=12
+    )
+
+    # Format the vertical axis
+    ax.yaxis.set_major_formatter(
+        FuncFormatter(lambda value, position: f"Rs. {value:,.0f}")
+    )
+
+    # Clean gridlines and borders
+    ax.set_axisbelow(True)
+    ax.grid(axis="y", linestyle="--", alpha=0.25)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_color("#D1D5DB")
+
+    ax.tick_params(axis="both", labelsize=10, colors="#4B5563")
+    ax.tick_params(axis="y", length=0)
+    ax.tick_params(axis="x", length=0, pad=8)
+
+    plt.xticks(rotation=30, ha="right")
+
+    # Leave space for amounts above the bars
+    maximum = max(totals)
+    ax.set_ylim(0, maximum * 1.20 if maximum > 0 else 1)
+
+    plt.tight_layout()
+    plt.show()
+
 def update_summary():
     total = sum(expense["amount"] for expense in expenses)
     count = len(expenses)
@@ -275,6 +385,44 @@ def show_category_analysis():
             text=f"{category}: Rs. {total:.2f}",
             font=("Arial", 13)
         ).pack(pady=5)
+
+def export_expenses_to_csv():
+    if not expenses:
+        messagebox.showwarning(
+            "No Expenses",
+            "There are no expenses to export."
+        )
+        return
+
+    file_path = filedialog.asksaveasfilename(
+        defaultextension=".csv",
+        filetypes=[("CSV files", "*.csv")],
+        title="Save Expense Report"
+    )
+
+    if not file_path:
+        return
+
+    try:
+        with open(file_path, "w", newline="", encoding="utf-8-sig") as file:
+            writer = csv.DictWriter(
+                file,
+                fieldnames=["date", "category", "description", "amount"]
+            )
+
+            writer.writeheader()
+            writer.writerows(expenses)
+
+        messagebox.showinfo(
+            "Export Successful",
+            "Your expenses were exported successfully!"
+        )
+
+    except OSError as error:
+        messagebox.showerror(
+            "Export Failed",
+            f"Could not save the file:\n{error}"
+        )
 
 root = tk.Tk()
 root.title("Personal Expense Tracker")
@@ -410,6 +558,14 @@ monthly_button = tk.Button(
 )
 monthly_button.pack(padx=20, pady=5)
 
+export_button = tk.Button(
+    summary_frame,
+    text="Export to CSV",
+    font=("Arial", 12),
+    command=export_expenses_to_csv
+)
+export_button.pack(pady=5)
+
 category_button = tk.Button(
     summary_frame,
     text="Category Analysis",
@@ -451,6 +607,14 @@ search_entry.pack(
     expand=True,
     padx=5
 )
+
+chart_button = tk.Button(
+    summary_frame,
+    text="Monthly Expense Chart",
+    font=("Arial", 12),
+    command=show_monthly_chart
+)
+chart_button.pack(pady=5)
 
 search_button = tk.Button(
     search_frame,
