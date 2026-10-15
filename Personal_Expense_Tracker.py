@@ -459,7 +459,8 @@ summary_frame.pack(
     side="right",
     fill="both",
     padx=10,
-    pady=10
+    pady=10,
+    expand=True
 )
 
 total_label = tk.Label(
@@ -470,7 +471,7 @@ total_label = tk.Label(
 )
 total_label.pack(
     padx=20,
-    pady=8
+    pady=5
 )
 
 count_label = tk.Label(
@@ -551,12 +552,99 @@ def show_monthly_expenses():
     except ValueError:
         print("Please enter a valid month and year.")
 
+def calculate_remaining_budget(budget, month, year):
+    monthly_total = calculate_monthly_expense(month, year)
+    remaining = budget - monthly_total
+
+    return remaining
+
+def save_budget(budget):
+    with open("budget.json", "w") as file:
+        json.dump(budget, file)
+
+
+def load_budget():
+    try:
+        with open("budget.json", "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return 0
+
+def set_monthly_budget():
+    try:
+        budget = float(budget_entry.get())
+
+        if budget <= 0:
+            messagebox.showwarning(
+                "Invalid Budget",
+                "Budget must be greater than 0."
+            )
+            return
+
+        save_budget(budget)
+
+        budget_status_label.config(
+            text=f"Monthly Budget: Rs. {budget:,.2f}"
+        )
+
+        budget_entry.delete(0, tk.END)
+
+    except ValueError:
+        messagebox.showwarning(
+            "Invalid Input",
+            "Please enter a valid budget amount."
+        )
+
+def open_budget_window():
+    global budget_entry, budget_status_label
+
+    budget_window = tk.Toplevel(root)
+    budget_window.title("Monthly Budget")
+    budget_window.geometry("350x250")
+
+    tk.Label(
+        budget_window,
+        text="Set Your Monthly Budget",
+        font=("Arial", 16, "bold")
+    ).pack(pady=15)
+
+    budget_entry = tk.Entry(
+        budget_window,
+        font=("Arial", 12)
+    )
+    budget_entry.pack(pady=5)
+
+    saved_budget = load_budget()
+    if saved_budget > 0:
+        budget_entry.insert(0, str(saved_budget))
+
+    budget_status_label = tk.Label(
+        budget_window,
+        text="",
+        font=("Arial", 11)
+    )
+    budget_status_label.pack(pady=5)
+
+    tk.Button(
+        budget_window,
+        text="Set Budget",
+        command=set_monthly_budget
+    ).pack(pady=10)
+
 monthly_button = tk.Button(
     summary_frame,
     text="Calculate Monthly Expenses",
     command=show_monthly_expenses
 )
 monthly_button.pack(padx=20, pady=5)
+
+budget_window_button = tk.Button(
+    summary_frame,
+    text="Monthly Budget",
+    font=("Arial", 12),
+    command=open_budget_window
+)
+budget_window_button.pack(pady=5)
 
 export_button = tk.Button(
     summary_frame,
@@ -573,6 +661,14 @@ category_button = tk.Button(
     command=show_category_analysis
 )
 category_button.pack(pady=5)
+
+budget_window_button = tk.Button(
+    summary_frame,
+    text="Monthly Budget",
+    font=("Arial", 12),
+    command=open_budget_window
+)
+budget_window_button.pack(pady=5)
 
 inner_frame = tk.Frame(
     my_frame,
