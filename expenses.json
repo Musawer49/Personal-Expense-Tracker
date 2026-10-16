@@ -28,5 +28,11 @@
         "category": "Transport",
         "description": "Bus Fair ",
         "date": "20-2-2026"
+    },
+    {
+        "amount": 3000.0,
+        "category": "Food",
+        "description": "Dinnner",
+        "date": "21-6-2026"
     }
 ]

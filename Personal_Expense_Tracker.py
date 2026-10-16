@@ -146,7 +146,7 @@ def add_expense():
 
     save_expenses()
     update_summary()
-
+    update_budget_status()
 
 def delete_expense(expense, expense_card):
     expenses.remove(expense)
@@ -583,16 +583,44 @@ def set_monthly_budget():
 
         save_budget(budget)
 
-        budget_status_label.config(
-            text=f"Monthly Budget: Rs. {budget:,.2f}"
-        )
-
         budget_entry.delete(0, tk.END)
+        update_budget_status()
 
     except ValueError:
         messagebox.showwarning(
             "Invalid Input",
             "Please enter a valid budget amount."
+        )
+
+
+def update_budget_status():
+    budget = load_budget()
+
+    if budget <= 0:
+        budget_status_label.config(text="Budget not set")
+        return
+
+    today = datetime.today()
+    spent = calculate_monthly_expense(today.month, today.year)
+    remaining = budget - spent
+
+    if remaining < 0:
+        status = f"Budget exceeded by Rs. {abs(remaining):,.2f}"
+    else:
+        status = f"Remaining: Rs. {remaining:,.2f}"
+
+    budget_status_label.config(
+        text=(
+            f"Monthly Budget: Rs. {budget:,.2f}\n"
+            f"Spent: Rs. {spent:,.2f}\n"
+            f"{status}"
+        )
+    )
+
+    if remaining < 0:
+        messagebox.showwarning(
+            "Budget Exceeded",
+            "Your expenses have exceeded the monthly budget!"
         )
 
 def open_budget_window():
