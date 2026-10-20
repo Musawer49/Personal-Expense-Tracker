@@ -666,14 +666,6 @@ monthly_button = tk.Button(
 )
 monthly_button.pack(padx=20, pady=5)
 
-budget_window_button = tk.Button(
-    summary_frame,
-    text="Monthly Budget",
-    font=("Arial", 12),
-    command=open_budget_window
-)
-budget_window_button.pack(pady=5)
-
 export_button = tk.Button(
     summary_frame,
     text="Export to CSV",
