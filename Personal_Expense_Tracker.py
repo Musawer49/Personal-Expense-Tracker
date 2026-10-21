@@ -206,7 +206,6 @@ def calculate_monthly_expense(month, year):
             monthly_total += expense["amount"]
 
     return monthly_total
-print("October expenses:", calculate_monthly_expense(10, 2026))
 
 def show_monthly_chart():
     import matplotlib.pyplot as plt
@@ -652,6 +651,7 @@ def open_budget_window():
         font=("Arial", 11)
     )
     budget_status_label.pack(pady=5)
+    update_budget_status()
 
     tk.Button(
         budget_window,
