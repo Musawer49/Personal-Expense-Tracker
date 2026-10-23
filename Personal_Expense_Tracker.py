@@ -1,5 +1,6 @@
 import tkinter as tk
 import json
+from tkinter import ttk
 from datetime import datetime
 import csv
 from tkinter import filedialog, messagebox
@@ -593,6 +594,9 @@ def set_monthly_budget():
 
 
 def update_budget_status():
+    if "budget_status_label" not in globals():
+        return
+
     budget = load_budget()
 
     if budget <= 0:
@@ -855,18 +859,28 @@ category_label.grid(
     sticky="w"
 )
 
-
-category_entry = tk.Entry(
+category_entry = ttk.Combobox(
     inner_frame,
-    font=("Arial", 14)
+    font=("Arial", 14),
+    values=[
+        "Food",
+        "Transport",
+        "Shopping",
+        "Bills",
+        "Health",
+        "Education",
+        "Entertainment",
+        "Other"
+    ],
+    state="readonly"
 )
+
 category_entry.grid(
     row=1,
     column=1,
     padx=10,
     pady=10
 )
-
 
 # Description
 description_label = tk.Label(

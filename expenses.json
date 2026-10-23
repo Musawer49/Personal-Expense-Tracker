@@ -34,5 +34,11 @@
         "category": "Food",
         "description": "Dinnner",
         "date": "21-6-2026"
+    },
+    {
+        "amount": 2000.0,
+        "category": "Bills",
+        "description": "PTCL Bill",
+        "date": "21-7-2026"
     }
 ]
