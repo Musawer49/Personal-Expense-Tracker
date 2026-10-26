@@ -1,15 +1,17 @@
-"""Personal Expense Tracker - modern Tkinter UI (no extra libraries needed)."""
 import csv
 import json
 import os
+import shutil
 import tkinter as tk
 from datetime import datetime
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
-DATA_FILE = "expenses.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # folder this script lives in
+EXPENSE_FILE = os.path.join(BASE_DIR, "expenses.json")   # your existing list of expenses
+BUDGET_FILE = os.path.join(BASE_DIR, "budget.json")     # your existing budget (a number)
 DATE_FMT = "%d-%m-%Y"
 CATEGORIES = ["Food", "Transport", "Shopping", "Bills", "Health",
-              "Entertainment", "Education", "Personal Item", "Other"]
+              "Entertainment", "Education", "Personal Item", "Office Item", "Other"]
 MONTHS = ["January", "February", "March", "April", "May", "June", "July",
           "August", "September", "October", "November", "December"]
 
@@ -47,6 +49,7 @@ class ExpenseTracker(tk.Tk):
 
         self.expenses, self.budget = [], 0.0
         self.editing_id = None
+        self.sort_col, self.sort_rev = "date", True
         self.load()
 
         self.setup_styles()
@@ -60,21 +63,44 @@ class ExpenseTracker(tk.Tk):
         self.build_form(body)
         self.build_main(body)
         self.refresh()
+        if self.load_warning:
+            self.after(300, lambda: messagebox.showwarning("Load problem", self.load_warning))
 
     # ------------------------------------------------------------ storage
     def load(self):
-        if os.path.exists(DATA_FILE):
+        self.load_warning = ""
+        # expense.json is a plain list; ids are created in memory only
+        if os.path.exists(EXPENSE_FILE):
             try:
-                with open(DATA_FILE, "r", encoding="utf-8") as f:
-                    d = json.load(f)
-                self.expenses = d.get("expenses", [])
-                self.budget = float(d.get("budget", 0))
-            except (json.JSONDecodeError, OSError):
+                with open(EXPENSE_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                self.expenses = [
+                    dict(amount=float(e["amount"]), category=e["category"],
+                         description=e.get("description", "").strip(),
+                         date=e["date"], id=i + 1)
+                    for i, e in enumerate(data)]
+            except (json.JSONDecodeError, OSError, KeyError, ValueError, TypeError) as err:
+                self.expenses = []
+                try:
+                    shutil.copy(EXPENSE_FILE, EXPENSE_FILE + ".bak")
+                except OSError:
+                    pass
+                self.load_warning = (f"Could not read:\n{EXPENSE_FILE}\n\n{err}\n\n"
+                                     "A backup copy was saved as expense.json.bak.")
+        # budget.json holds just a number, e.g. 50000.0
+        if os.path.exists(BUDGET_FILE):
+            try:
+                with open(BUDGET_FILE, "r", encoding="utf-8") as f:
+                    self.budget = float(json.load(f))
+            except (json.JSONDecodeError, OSError, ValueError, TypeError):
                 pass
 
     def save(self):
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump({"expenses": self.expenses, "budget": self.budget}, f, indent=2)
+        keys = ("amount", "category", "description", "date")
+        with open(EXPENSE_FILE, "w", encoding="utf-8") as f:
+            json.dump([{k: e[k] for k in keys} for e in self.expenses], f, indent=4)
+        with open(BUDGET_FILE, "w", encoding="utf-8") as f:
+            json.dump(self.budget, f)
 
     # ------------------------------------------------------------- styles
     def setup_styles(self):
@@ -232,7 +258,7 @@ class ExpenseTracker(tk.Tk):
         for c, t, w, a in (("date", "DATE", 110, "w"), ("category", "CATEGORY", 140, "w"),
                            ("description", "DESCRIPTION", 260, "w"),
                            ("amount", "AMOUNT", 110, "e")):
-            self.tree.heading(c, text=t, anchor=a)
+            self.tree.heading(c, text=t, anchor=a, command=lambda c=c: self.sort_by(c))
             self.tree.column(c, width=w, anchor=a, stretch=(c == "description"))
         self.tree.tag_configure("odd", background="#FAFAFB")
         sb = ttk.Scrollbar(tc, orient="vertical", command=self.tree.yview)
@@ -343,8 +369,18 @@ class ExpenseTracker(tk.Tk):
 
     # ------------------------------------------------------------ refresh
     def sorted_expenses(self):
-        return sorted(self.expenses,
-                      key=lambda e: parse_date(e["date"]) or datetime.min, reverse=True)
+        def key(e):
+            if self.sort_col == "date":
+                return parse_date(e["date"]) or datetime.min
+            if self.sort_col == "amount":
+                return e["amount"]
+            return str(e[self.sort_col]).lower()
+        return sorted(self.expenses, key=key, reverse=self.sort_rev)
+
+    def sort_by(self, col):
+        self.sort_rev = not self.sort_rev if self.sort_col == col else False
+        self.sort_col = col
+        self.refresh_table()
 
     def selected_month_year(self):
         try:
