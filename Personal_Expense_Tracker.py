@@ -29,6 +29,12 @@ MUTED = "#6B7280"
 BORDER = "#E5E7EB"
 BAR_COLORS = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444", "#06B6D4",
               "#8B5CF6", "#EC4899", "#84CC16", "#64748B"]
+CATEGORY_COLORS = {
+    "Food": "#B45309", "Transport": "#0E7490", "Shopping": "#BE185D",
+    "Bills": "#B91C1C", "Health": "#047857", "Entertainment": "#6D28D9",
+    "Education": "#4338CA", "Personal Item": "#0369A1",
+    "Office Item": "#475569", "Other": "#4B5563",
+}
 FONT = "Segoe UI"
 
 
@@ -261,6 +267,8 @@ class ExpenseTracker(tk.Tk):
             self.tree.heading(c, text=t, anchor=a, command=lambda c=c: self.sort_by(c))
             self.tree.column(c, width=w, anchor=a, stretch=(c == "description"))
         self.tree.tag_configure("odd", background="#FAFAFB")
+        for cat, col in CATEGORY_COLORS.items():
+            self.tree.tag_configure(cat.replace(" ", "_"), foreground=col)
         sb = ttk.Scrollbar(tc, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=sb.set)
         self.tree.grid(row=1, column=0, sticky="nsew", padx=(8, 0))
@@ -403,16 +411,21 @@ class ExpenseTracker(tk.Tk):
         self.month_total.config(text=f"Rs. {month_sum:,.0f}")
         if self.budget > 0:
             pct = month_sum / self.budget * 100
-            self.budget_lbl.config(
-                text=f"{pct:.0f}% of Rs. {self.budget:,.0f} budget used"
-                     f"  •  Rs. {max(self.budget - month_sum, 0):,.0f} left")
+            if pct >= 100:
+                msg = f"⚠ Over budget by Rs. {month_sum - self.budget:,.0f}"
+            elif pct >= 90:
+                msg = f"⚠ {pct:.0f}% used — only Rs. {self.budget - month_sum:,.0f} left"
+            else:
+                msg = (f"{pct:.0f}% of Rs. {self.budget:,.0f} budget used"
+                       f"  •  Rs. {self.budget - month_sum:,.0f} left")
+            self.budget_lbl.config(text=msg, foreground=DANGER if pct >= 90 else MUTED)
             self.budget_bar.config(value=min(pct, 100),
                                    style=("Red" if pct >= 90 else "Green")
                                          + ".Horizontal.TProgressbar")
         else:
-            self.budget_lbl.config(text="No budget set — click “Monthly Budget”")
+            self.budget_lbl.config(text="No budget set — click “Monthly Budget”", foreground=MUTED)
             self.budget_bar.config(value=0)
-        self.refresh_table()
+        self.refresh_table()    
 
     def refresh_table(self):
         self.tree.delete(*self.tree.get_children())
@@ -425,7 +438,7 @@ class ExpenseTracker(tk.Tk):
             self.tree.insert("", "end", iid=str(e["id"]),
                              values=(e["date"], e["category"], e["description"],
                                      f"Rs. {e['amount']:,.0f}"),
-                             tags=("odd",) if i % 2 else ())
+                             tags=(e["category"].replace(" ", "_"),) + (("odd",) if i % 2 else ()))                            
             i += 1
 
     # ------------------------------------------------------------- charts
