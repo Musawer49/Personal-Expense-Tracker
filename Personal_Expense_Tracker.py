@@ -456,11 +456,20 @@ class ExpenseTracker(tk.Tk):
         totals = {}
         for e in self.expenses:
             totals[e["category"]] = totals.get(e["category"], 0) + e["amount"]
-        win = self.popup("Category Analysis", 560, 420)
+        win = self.popup("Category Analysis", 560, 680)
         if not totals:
             tk.Label(win, text="No expenses yet.", bg=CARD, fg=MUTED).pack(pady=40)
             return
         grand = sum(totals.values())
+        pie = tk.Canvas(win, width=220, height=220, bg=CARD, highlightthickness=0)
+        pie.pack(pady=(4, 0))
+        start = 90
+        for cat, val in sorted(totals.items(), key=lambda x: -x[1]):
+            extent = max(-359.99, -360 * val / grand)
+            pie.create_arc(10, 10, 210, 210, start=start, extent=extent,
+                           fill=CATEGORY_COLORS.get(cat, "#4B5563"),
+                           outline="white", width=2)
+            start += extent
         frame = tk.Frame(win, bg=CARD)
         frame.pack(fill="both", expand=True, padx=24, pady=10)
         top = max(totals.values())
@@ -471,7 +480,7 @@ class ExpenseTracker(tk.Tk):
                      font=(FONT, 10)).pack(side="left")
             cv = tk.Canvas(r, width=250, height=16, bg="#F3F4F6", highlightthickness=0)
             cv.pack(side="left", padx=8)
-            cv.create_rectangle(0, 0, 250 * val / top, 16, fill=BAR_COLORS[i % 9], width=0)
+            cv.create_rectangle(0, 0, 250 * val / top, 16, fill=CATEGORY_COLORS.get(cat, "#4B5563"), width=0)
             tk.Label(r, text=f"Rs. {val:,.0f}  ({val / grand * 100:.0f}%)", bg=CARD,
                      fg=MUTED, font=(FONT, 9)).pack(side="left")
 
