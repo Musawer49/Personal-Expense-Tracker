@@ -252,8 +252,12 @@ class ExpenseTracker(tk.Tk):
         top = ttk.Frame(tc, padding=(16, 14, 16, 8))
         top.grid(row=0, column=0, sticky="ew")
         ttk.Label(top, text="Expenses", font=(FONT, 13, "bold")).pack(side="left")
+        self.filter_var = tk.StringVar(value="All")
+        fcb = ttk.Combobox(top, textvariable=self.filter_var,values=["All"] + CATEGORIES, state="readonly", width=14)
+        fcb.pack(side="right", padx=8)
+        fcb.bind("<<ComboboxSelected>>", lambda e: self.refresh_table())
         ttk.Button(top, text="Clear", style="Gray.TButton",
-                   command=lambda: self.search_var.set("")).pack(side="right")
+                   command=lambda: (self.search_var.set(""), self.filter_var.set("All"), self.refresh_table())).pack(side="right")
         self.search_var = tk.StringVar()
         self.search_var.trace_add("write", lambda *a: self.refresh_table())
         ttk.Entry(top, textvariable=self.search_var, width=28).pack(side="right", padx=8)
@@ -434,6 +438,8 @@ class ExpenseTracker(tk.Tk):
         for e in self.sorted_expenses():
             hay = f"{e['category']} {e['description']} {e['date']} {e['amount']}".lower()
             if q and q not in hay:
+                continue
+            if self.filter_var.get() not in ("All", e["category"]):
                 continue
             self.tree.insert("", "end", iid=str(e["id"]),
                              values=(e["date"], e["category"], e["description"],
