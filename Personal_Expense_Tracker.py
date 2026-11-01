@@ -252,6 +252,8 @@ class ExpenseTracker(tk.Tk):
         top = ttk.Frame(tc, padding=(16, 14, 16, 8))
         top.grid(row=0, column=0, sticky="ew")
         ttk.Label(top, text="Expenses", font=(FONT, 13, "bold")).pack(side="left")
+        self.shown_lbl = ttk.Label(top, text="", style="Muted.TLabel")
+        self.shown_lbl.pack(side="left", padx=12)
         self.filter_var = tk.StringVar(value="All")
         fcb = ttk.Combobox(top, textvariable=self.filter_var,values=["All"] + CATEGORIES, state="readonly", width=14)
         fcb.pack(side="right", padx=8)
@@ -435,6 +437,7 @@ class ExpenseTracker(tk.Tk):
         self.tree.delete(*self.tree.get_children())
         q = self.search_var.get().strip().lower()
         i = 0
+        shown_total = 0
         for e in self.sorted_expenses():
             hay = f"{e['category']} {e['description']} {e['date']} {e['amount']}".lower()
             if q and q not in hay:
@@ -445,7 +448,9 @@ class ExpenseTracker(tk.Tk):
                              values=(e["date"], e["category"], e["description"],
                                      f"Rs. {e['amount']:,.0f}"),
                              tags=(e["category"].replace(" ", "_"),) + (("odd",) if i % 2 else ()))                            
+            shown_total += e["amount"]
             i += 1
+        self.shown_lbl.config(text=f"{i} shown  •  Rs. {shown_total:,.0f}")
 
     # ------------------------------------------------------------- charts
     def popup(self, title, w, h):
