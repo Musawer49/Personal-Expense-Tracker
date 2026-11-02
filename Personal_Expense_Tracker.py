@@ -180,7 +180,9 @@ class ExpenseTracker(tk.Tk):
                                        values=CATEGORIES, state="readonly"))
         field("DESCRIPTION", ttk.Entry(inner, textvariable=self.desc_var))
         field("DATE (DD-MM-YYYY)", ttk.Entry(inner, textvariable=self.date_var))
-
+        ttk.Button(inner, text="Today", style="Gray.TButton",
+                   command=lambda: self.date_var.set(datetime.now().strftime(DATE_FMT))
+                   ).pack(anchor="w", pady=(6, 0))
         self.submit_btn = ttk.Button(inner, text="＋  Add Expense", style="Primary.TButton",
                                      command=self.submit)
         self.submit_btn.pack(fill="x", pady=(24, 6))
@@ -288,6 +290,8 @@ class ExpenseTracker(tk.Tk):
                    command=self.edit_selected).pack(side="left", padx=4)
         ttk.Button(bottom, text="🗑  Delete", style="Danger.TButton",
                    command=self.delete_selected).pack(side="left", padx=4)
+        ttk.Button(bottom, text="↩  Undo", style="Gray.TButton",
+                   command=self.undo_delete).pack(side="left", padx=4)
         for text, cmd in (("📈 Monthly Chart", self.show_monthly_chart),
                           ("📊 Category Analysis", self.show_category_analysis),
                           ("🎯 Monthly Budget", self.set_budget),
@@ -325,6 +329,7 @@ class ExpenseTracker(tk.Tk):
 
     def reset_form(self):
         self.editing_id = None
+        self.last_deleted = None
         self.amount_var.set("")
         self.category_var.set("")
         self.desc_var.set("")
@@ -356,9 +361,19 @@ class ExpenseTracker(tk.Tk):
         if eid is None:
             return messagebox.showinfo("Delete", "Select an expense first.")
         if messagebox.askyesno("Delete", "Delete this expense?"):
+            self.last_deleted = next(e for e in self.expenses if e["id"] == eid)
             self.expenses = [e for e in self.expenses if e["id"] != eid]
             self.save()
             self.refresh()
+
+    def undo_delete(self):
+        if not self.last_deleted:
+            return messagebox.showinfo("Undo", "Nothing to undo.")
+        self.last_deleted["id"] = max((e["id"] for e in self.expenses), default=0) + 1
+        self.expenses.append(self.last_deleted)
+        self.last_deleted = None
+        self.save()
+        self.refresh()
 
     def set_budget(self):
         v = simpledialog.askfloat("Monthly Budget", "Set monthly budget (Rs.):",
