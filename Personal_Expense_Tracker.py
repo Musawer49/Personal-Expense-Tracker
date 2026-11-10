@@ -188,6 +188,12 @@ class ExpenseTracker(tk.Tk):
         self.submit_btn.pack(fill="x", pady=(24, 6))
         self.cancel_btn = ttk.Button(inner, text="Cancel Edit", style="Gray.TButton",
                                      command=self.reset_form)
+        entries = [w for w in inner.winfo_children() if isinstance(w, ttk.Entry)]
+        self.amount_entry = entries[0]
+        self.amount_entry.focus_set()
+        for w in entries:
+            w.bind("<Return>", lambda e: self.submit())
+
 
     def build_main(self, parent):
         main = tk.Frame(parent, bg=BG)
@@ -337,7 +343,8 @@ class ExpenseTracker(tk.Tk):
         self.form_title.config(text="Add New Expense")
         self.submit_btn.config(text="＋  Add Expense")
         self.cancel_btn.pack_forget()
-
+        self.amount_entry.focus_set()
+        
     def selected_id(self):
         sel = self.tree.selection()
         return int(sel[0]) if sel else None
